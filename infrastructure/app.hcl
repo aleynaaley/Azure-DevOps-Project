@@ -1,4 +1,4 @@
 locals {
     application_name = "ocarina"
-    application_shortname =  "ocarina"
+    application_shortname =  "ocr"
 }
