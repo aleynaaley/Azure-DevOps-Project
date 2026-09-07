@@ -1,0 +1,33 @@
+name: Deploy Static Web App 
+
+# otomatik bir push değil ben manuel olarak tetikleyeceğim demek
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Build app
+        working-directory: app/my-ocarina-app
+        run: npm ci && npm run build
+
+      - name: Deploy to azure static web apps
+        id: deploy
+        uses: shibayan/swa-deploy@v1
+        with:
+          app-location: app/my-ocarina-app/dist
+          deployment-token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+
+      - name: Show deployment URL
+        run: echo "${{ steps.deploy.outputs.deployment-url }}"
+
