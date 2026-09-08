@@ -4,10 +4,12 @@ import HeaderCard from "./components/HeaderCard";
 import InfoCard from "./components/InfoCard";
 import InputCard from "./components/InputCard";
 import OutputCard from "./components/OutputCard";
+import ExampleSongs from "./components/ExampleSongs";
 
 function App() {
   const [notes, setNotes] = useState("");
   const [outputLines, setOutputLines] = useState([]);
+  const [showExampleSongs, setShowExampleSongs] = useState(false);
 
   const noteMap = {
     // Middle octave (capital)
@@ -74,7 +76,15 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-600 via-teal-700 to-cyan-800">
-      <Navigation />
+      <Navigation
+        onExampleSongsClick={() => setShowExampleSongs(true)}
+      />
+
+      <ExampleSongs
+        isOpen={showExampleSongs}
+        onClose={() => setShowExampleSongs(false)}
+        setNotes={setNotes}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <HeaderCard />
