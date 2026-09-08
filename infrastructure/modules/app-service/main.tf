@@ -14,10 +14,15 @@ resource "azurerm_linux_web_app" "lwapp" {
   service_plan_id     = azurerm_service_plan.sp.id
 
   site_config {
+
+    always_on = false
+
     application_stack {
-    java_version        = "21"
-    java_server         = "JAVA"
-    java_server_version = "21-java21"
-  }
+        java_version        = "21"
+        java_server         = "JAVA"
+        java_server_version = "21-java21"
+    }
   }
 }
+ 
+//always_on must be explicitly set to false when using Free, F1, D1, or Shared Service Plans.
