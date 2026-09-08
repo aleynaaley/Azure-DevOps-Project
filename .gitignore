@@ -40,3 +40,6 @@ crash.log
 crash.*.log
 
 **/location.hcl
+
+*/target/
+
