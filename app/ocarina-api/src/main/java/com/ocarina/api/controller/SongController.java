@@ -36,6 +36,11 @@ public class SongController {
                         4L,
                         "Test from pipeline",
                         "D F a a b D F a a b a D F G F E G F#"
+                ),
+                new Song(
+                        5L,
+                        "Ode to Joy",
+                        "E E F G"
                 )
         );
     }
