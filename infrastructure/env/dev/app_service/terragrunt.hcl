@@ -20,3 +20,4 @@ inputs = {
     location = "westeurope"
     resource_group_name = dependency.rg.outputs.name
 }
+
