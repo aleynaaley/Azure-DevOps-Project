@@ -1,0 +1,67 @@
+name: İnfrastructure Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - 'infrastructure/**'
+
+  pull_request:
+    paths:
+    - 'infrastructure/**'
+
+env:
+  working_dir: 'infrastructure/env/dev'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  plan:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name : Setup Terraform 
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.16.2
+
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
+        with:
+          tg_version: 0.82.2
+
+      - name: Azure Login
+        
+
+      - name: Run terragrunt plan
+        working-directory: infrastructure/env/dev
+        run: terragrunt run --all plan
+
+
+  apply:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name : Setup Terraform 
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.16.2
+
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
+        with:
+          tg_version: 0.82.2
+
+      - name: Run terragrunt apply
+        working-directory: infrastructure/env/dev
+        run: terragrunt run --all apply --terragrunt-non-interactive
