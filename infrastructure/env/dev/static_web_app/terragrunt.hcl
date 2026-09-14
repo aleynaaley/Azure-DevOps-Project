@@ -16,6 +16,6 @@ locals {
 
 inputs = {
     name     = "swa-${local.app_config.locals.application_shortname}-dev"
-    location = "westeurope"
+    location = "eastus2"
     resource_group_name = dependency.rg.outputs.name
 }
