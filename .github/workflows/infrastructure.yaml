@@ -6,11 +6,11 @@ on:
     branches:
     - main
     paths:
-    - 'infrastructure/env/dev/static_web_app/**'
+    - 'infrastructure/**'
 
   pull_request:
     paths:
-      - 'infrastructure/env/dev/static_web_app/**'
+      - 'infrastructure/**'
 
 ## bu workflowun github tarafındaki yetkileri
 ## id-token , workflowa OIDC kimlik tokenı isteme-ürettirme izni verir.
@@ -31,11 +31,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.16.2
+          terraform_wrapper: false
 
       - name: Setup Terragrunt
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: 0.82.2
+          tf_path: terraform
 
       - name: Azure login
         uses: azure/login@v3
@@ -46,9 +48,9 @@ jobs:
           mask-client-id: false
 
       - name: Run terragrunt plan
-        working-directory: infrastructure/env/dev/static_web_app
-        run: terragrunt plan
-
+        working-directory: infrastructure/env/dev
+        run: terragrunt run --all plan
+## bağımlılıklardan dolayı terragrunt plan kısmı da çalışmıyor 
 
   apply:
     if: github.event_name == 'push'
@@ -61,11 +63,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.16.2
+          terraform_wrapper: false
 
       - name: Setup Terragrunt
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: 0.82.2
+          tf_path: terraform
 
       - name: Azure Login
         uses: azure/login@v3
@@ -76,6 +80,6 @@ jobs:
           mask-client-id: false
 
       - name: Terragrunt Apply
-        working-directory: infrastructure/env/dev/static_web_app
-        run: terragrunt apply -auto-approve
+        working-directory: infrastructure/env/dev
+        run: terragrunt run --all apply -- -auto-approve
 

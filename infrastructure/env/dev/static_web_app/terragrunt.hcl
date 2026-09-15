@@ -19,3 +19,4 @@ inputs = {
     location = "eastus2"
     resource_group_name = dependency.rg.outputs.name
 }
+
