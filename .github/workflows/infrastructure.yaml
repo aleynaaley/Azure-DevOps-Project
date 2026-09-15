@@ -36,6 +36,7 @@ jobs:
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: 0.82.2
+          tf_path: terraform
 
       - name: Azure login
         uses: azure/login@v3
@@ -66,6 +67,7 @@ jobs:
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: 0.82.2
+          tf_path: terraform
 
       - name: Azure Login
         uses: azure/login@v3
