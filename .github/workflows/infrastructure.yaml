@@ -6,11 +6,11 @@ on:
     branches:
     - main
     paths:
-    - 'infrastructure/env/dev/static_web_app/**'
+    - 'infrastructure/**'
 
   pull_request:
     paths:
-      - 'infrastructure/env/dev/static_web_app/**'
+      - 'infrastructure/**'
 
 ## bu workflowun github tarafındaki yetkileri
 ## id-token , workflowa OIDC kimlik tokenı isteme-ürettirme izni verir.
@@ -48,8 +48,8 @@ jobs:
           mask-client-id: false
 
       - name: Run terragrunt plan
-        working-directory: infrastructure/env/dev/static_web_app
-        run: terragrunt plan
+        working-directory: infrastructure/env/dev
+        run: terragrunt run --all plan
 
 
   apply:
@@ -80,6 +80,6 @@ jobs:
           mask-client-id: false
 
       - name: Terragrunt Apply
-        working-directory: infrastructure/env/dev/static_web_app
-        run: terragrunt apply -auto-approve
+        working-directory: infrastructure/env/dev
+        run: terragrunt run --all apply -- -auto-approve
 
