@@ -1,0 +1,81 @@
+name: İnfrastructure Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - 'infrastructure/env/dev/static_web_app/**'
+
+  pull_request:
+    paths:
+      - 'infrastructure/env/dev/static_web_app/**'
+
+## bu workflowun github tarafındaki yetkileri
+## id-token , workflowa OIDC kimlik tokenı isteme-ürettirme izni verir.
+## contents, workflowun repositorydeki dosyaları okuma izni verir.
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  plan:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name : Setup Terraform 
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.16.2
+
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
+        with:
+          tg_version: 0.82.2
+
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          mask-client-id: false
+
+      - name: Run terragrunt plan
+        working-directory: infrastructure/env/dev/static_web_app
+        run: terragrunt plan
+
+
+  apply:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name : Setup Terraform 
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.16.2
+
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
+        with:
+          tg_version: 0.82.2
+
+      - name: Azure Login
+        uses: azure/login@v3
+        with:
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          mask-client-id: false
+
+      - name: Terragrunt Apply
+        working-directory: infrastructure/env/dev/static_web_app
+        run: terragrunt apply -auto-approve
+
