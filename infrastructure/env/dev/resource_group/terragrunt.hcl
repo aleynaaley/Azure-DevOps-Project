@@ -10,8 +10,8 @@ locals {
     app_config  = read_terragrunt_config(find_in_parent_folders("app.hcl"))
 }
 
-// name = "rg-ocarina-dev"
+// name = "rg-ocr-dev"
 inputs = {
     name     = "rg-${local.app_config.locals.application_shortname}-dev"
-    location = "westeurope"
+    location = "eastus2"
 }

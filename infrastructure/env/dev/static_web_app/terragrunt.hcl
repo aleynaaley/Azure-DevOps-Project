@@ -8,6 +8,11 @@ include "root" {
 
 dependency "rg" {
     config_path = "../resource_group"
+
+    mock_outputs = {
+        name = "rg-ocr-dev"
+    }
+    mock_outputs_allowed_terraform_commands = ["plan", "validate"]
 } 
 
 locals {
